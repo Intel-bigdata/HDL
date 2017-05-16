@@ -1,0 +1,13 @@
+#!/bin/bash
+# Run scala API
+
+DEBUG=0
+MXNET_HOME="../mxnet"
+PLATFORM="linux-x86_64-cpu"
+
+if [[ DEBUG==0 ]]; then
+	CLIENT_MAIN_CLASS="ml.dmlc.mxnet.examples.imclassification.TrainMnist"
+else
+	CLIENT_MAIN_CLASS="ml.dmlc.mxnet.examples.imclassification.GenTrain"
+fi
+java -Xmx4G -Djava.ext.dirs=mxnetjar $CLIENT_MAIN_CLASS $@
