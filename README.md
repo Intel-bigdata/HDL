@@ -29,19 +29,18 @@ This project will focuses on the whole architecture, common facilities and high 
 
 ### 1. TensorFlowOnYARN 
    
-   1. Prepare the build environment following the instructions from https://www.tensorflow.org/install/install_sources
+   1. Prepare the build environment following the instructions from [Tensorflow tutorial](https://www.tensorflow.org/install/install_sources)
 
    2. Run the [between-graph mnist example](TensorflowOnYARN/examples/between-graph/mnist_feed.py).
    
-      Method One:
+	**Method One:**
 
       ```bash
       cd tensorflow-yarn-${VERSION}
       bin/ydl-tf launch --num_worker 2 --num_ps 2
       ```
 
-      This will launch a YARN application, which creates a `tf.train.Server` instance for each task.
-       A `ClusterSpec` is printed on the console such that you can submit the training script to. e.g.
+      This will launch a YARN application, which creates a `tf.train.Server` instance for each task. A `ClusterSpec` is printed on the console such that you can submit the training script to. e.g.
 
       ```bash
       ClusterSpec: {"ps":["node1:22257","node2:22222"],"worker":["node3:22253","node2:22255"]}
@@ -58,7 +57,9 @@ This project will focuses on the whole architecture, common facilities and high 
         --worker_hosts="worker0.hostname:worker0.port,worker1.hostname:worker1.port" \
         --task_index=1
       ```
-      Method Two:
+	**Method Two:**
+      
+      Directly submit training jobs and parameters to YARN.
 
       ```bash
       python demo.py "bin/ydl-tf" "launch" "examples/between-graph/mnist_feed.py"
@@ -70,15 +71,15 @@ This project will focuses on the whole architecture, common facilities and high 
       bin/ydl-tf cluster --app_id <Application ID>
       ```
 
-   4. You may also use YARN commands through `ydl-tf`. 
+   4. You can also use YARN commands through `ydl-tf`. 
 
-      For example, to get running application list,
+      For example, get running application list,
 
       ```bash
       bin/ydl-tf application --list
       ```
 
-      or to kill an existing YARN application(TensorFlow cluster),
+      or kill an existing YARN application(TensorFlow cluster),
 
       ```bash
       bin/ydl-tf kill --application <Application ID>
@@ -88,28 +89,29 @@ This project will focuses on the whole architecture, common facilities and high 
    
 ### 2. CaffeYARN 
 
-   1.run the binary file with the jar package,prototxt,and the caffemodule,the num means the number of service  we lanuch
+   1. Train mnist with the jar package, prototxt and parameters. The number means the number of service we launch.
+   
+	```bash
+	./ydl-caffe -jar ydl-caffe.jar -conf /path/lenet_memory_solver.prototxt -model hdfs:///mnist.model -num 3
+	```
 
-       ```bash
-       ./ydl-caffe -jar ydl-caffe.jar -conf /path/lenet_memory_solver.prototxt -model hdfs:///mnist.model -num 3
-       ```
+   2. Check the log using the applicationId we get from the screen 
 
-   2.check the log using the applicationId we get from the screen 
-
-       ```bash
-       yarn logs -applicationId xxxxxxxxxx | less
-       ```
+   ```bash
+   yarn logs -applicationId xxxxxxxxxx | less
+   ```
 
 ### 3. MxnetOnYARN 
    
-   1.run the binary file in sync style 
+   1. Train mnist in distributed model.
 
-       ```bash
-       ./bin/ydl-mx 2 train_mnist.py --kv-store sync
-       ```
-   2.check the log  using the applicationId we get from the screen 
+   ```bash
+   ./bin/ydl-mx 2 train_mnist.py --kv-store sync
+   ```
+   
+   2. Check the log using the applicationId we get from the screen 
 
-       ```bash
-       yarn logs -applicationId xxxxxxxxxxxx | less
-       ```
+   ```bash
+   yarn logs -applicationId xxxxxxxxxxxx | less
+   ```
 
