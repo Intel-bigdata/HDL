@@ -25,9 +25,9 @@ This project will focuses on the whole architecture, common facilities and high 
 * As a common and low level facility layer, easier to optimize in bottom, yet powerful to support above frameworks, such as Spark, Flink, Hive and Streams. Don’t need to hack everywhere, but in a central place and common layer.
 * Security, enterprise and distribution. A mature ecosystem for Deep Learning to build upon.
 
-# Run The MNIST
+# How TO Run
 
-1. TensorFlowOnYARN 
+### 1. TensorFlowOnYARN 
    
    1. Prepare the build environment following the instructions from https://www.tensorflow.org/install/install_sources
 
@@ -86,17 +86,30 @@ This project will focuses on the whole architecture, common facilities and high 
 
    
    
-2. CaffeYARN 
-   
-   ```bash
-   ./ydl-caffe -jar ydl-caffe.jar -conf /path/lenet_memory_solver.prototxt -model hdfs:///mnist.model -num 3
-   yarn logs -applicationId xxxxxxxxxx | less
-   ```
+### 2. CaffeYARN 
 
-3. MxnetOnYARN 
+   1.run the binary file with the jar package,prototxt,and the caffemodule,the num means the number of service  we lanuch
+
+       ```bash
+       ./ydl-caffe -jar ydl-caffe.jar -conf /path/lenet_memory_solver.prototxt -model hdfs:///mnist.model -num 3
+       ```
+
+   2.check the log using the applicationId we get from the screen 
+
+       ```bash
+       yarn logs -applicationId xxxxxxxxxx | less
+       ```
+
+### 3. MxnetOnYARN 
    
-   ```bash
-   ./bin/ydl-mx 2 train_mnist.py --kv-store sync
-   yarn logs -applicationId xxxxxxxxxxxx | less
-   ```
+   1.run the binary file in sync style 
+
+       ```bash
+       ./bin/ydl-mx 2 train_mnist.py --kv-store sync
+       ```
+   2.check the log  using the applicationId we get from the screen 
+
+       ```bash
+       yarn logs -applicationId xxxxxxxxxxxx | less
+       ```
 
