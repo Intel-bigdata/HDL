@@ -9,7 +9,7 @@ This project will focuses on the whole architecture, common facilities and high 
 
 # High level considerations
 * A new layer in Hadoop for launching, distributing and executing Deep Learning workloads like for MapReduce;
-* A framework in the new layer to leverage and support existing Deep Learning engines such as Tensorflow, Caffe/Intel-Caffe, mxnet, Nevana and etc.;
+* A framework in the new layer to leverage and support existing Deep Learning engines such as Tensorflow, Caffe/Intel-Caffe, MXNet, Nevana and etc.;
 * Extend and enhance YARN to support the desired scheduling capabilities, like already raised in the community, for FPGA, GPU and etc.;
 * Optimize HDFS storage and provide desired data formats for Deep Learning;
 * Tools and libraries to submit and manage DL jobs, necessary web UIs for the monitoring and troubleshooting;
@@ -29,89 +29,88 @@ This project will focuses on the whole architecture, common facilities and high 
 
 ### 1. TensorFlowOnYARN 
    
-   1. Prepare the build environment following the instructions from [Tensorflow tutorial](https://www.tensorflow.org/install/install_sources)
+1. Prepare the build environment following the instructions from [Tensorflow tutorial](https://www.tensorflow.org/install/install_sources)
 
-   2. Run the [between-graph mnist example](TensorflowOnYARN/examples/between-graph/mnist_feed.py).
+2. Run the [between-graph mnist example](TensorflowOnYARN/examples/between-graph/mnist_feed.py).
    
-	**Method One:**
+**Method One:**
 
-      ```bash
-      cd tensorflow-yarn-${VERSION}
-      bin/ydl-tf launch --num_worker 2 --num_ps 2
-      ```
+Apply resources (ClusterSpec) and run.
 
-      This will launch a YARN application, which creates a `tf.train.Server` instance for each task. A `ClusterSpec` is printed on the console such that you can submit the training script to. e.g.
+```bash
+cd tensorflow-yarn-${VERSION}
+bin/ydl-tf launch --num_worker 2 --num_ps 2
+```
 
-      ```bash
-      ClusterSpec: {"ps":["node1:22257","node2:22222"],"worker":["node3:22253","node2:22255"]}
-      ```
+This will launch a YARN application, which creates a `tf.train.Server` instance for each task. A `ClusterSpec` is printed on the console such that you can submit the training script to. e.g.
 
-      ```bash
-      python examples/between-graph/mnist_feed.py \
-        --ps_hosts="ps0.hostname:ps0.port,ps1.hostname:ps1.port" \
-        --worker_hosts="worker0.hostname:worker0.port,worker1.hostname:worker1.port" \
-        --task_index=0
+```bash
+ClusterSpec: {"ps":["node1:22257","node2:22222"],"worker":["node3:22253","node2:22255"]}
+```
 
-      python examples/between-graph/mnist_feed.py \
-        --ps_hosts="ps0.hostname:ps0.port,ps1.hostname:ps1.port" \
-        --worker_hosts="worker0.hostname:worker0.port,worker1.hostname:worker1.port" \
-        --task_index=1
-      ```
-	**Method Two:**
-      
-      Directly submit training jobs and parameters to YARN.
+```bash
+python examples/between-graph/mnist_feed.py \
+	--ps_hosts="ps0.hostname:ps0.port,ps1.hostname:ps1.port" \
+	--worker_hosts="worker0.hostname:worker0.port,worker1.hostname:worker1.port" \
+	--task_index=0
 
-      ```bash
-      python demo.py "bin/ydl-tf" "launch" "examples/between-graph/mnist_feed.py"
-      ```
+python examples/between-graph/mnist_feed.py \
+	--ps_hosts="ps0.hostname:ps0.port,ps1.hostname:ps1.port" \
+	--worker_hosts="worker0.hostname:worker0.port,worker1.hostname:worker1.port" \
+	--task_index=1
+```
+**Method Two:**
+  
+Directly submit training jobs and parameters to YARN.
 
-   3. To get ClusterSpec of an existing TensorFlow cluster launched by a previous YARN application.
+```bash
+python demo.py "bin/ydl-tf" "launch" "examples/between-graph/mnist_feed.py"
+```
 
-      ```bash
-      bin/ydl-tf cluster --app_id <Application ID>
-      ```
+3. To get ClusterSpec of an existing TensorFlow cluster launched by a previous YARN application.
 
-   4. You can also use YARN commands through `ydl-tf`. 
+```bash
+bin/ydl-tf cluster --app_id <Application ID>
+```
 
-      For example, get running application list,
+4. You can also use YARN commands through `ydl-tf`. 
 
-      ```bash
-      bin/ydl-tf application --list
-      ```
+For example, get running application list,
 
-      or kill an existing YARN application(TensorFlow cluster),
+```bash
+bin/ydl-tf application --list
+```
 
-      ```bash
-      bin/ydl-tf kill --application <Application ID>
-      ```
+or kill an existing YARN application(TensorFlow cluster),
 
-   
-   
+```bash
+bin/ydl-tf kill --application <Application ID>
+```
+
 ### 2. CaffeYARN 
 
-   1. Train mnist with the jar package, prototxt and parameters. The number means the number of service we launch.
+1. Train mnist with the jar package, prototxt and parameters. The number means the number of service we launch.
    
-	```bash
-	./ydl-caffe -jar ydl-caffe.jar -conf /path/lenet_memory_solver.prototxt -model hdfs:///mnist.model -num 3
-	```
+```bash
+./ydl-caffe -jar ydl-caffe.jar -conf /path/lenet_memory_solver.prototxt -model hdfs:///mnist.model -num 3
+```
 
-   2. Check the log using the applicationId we get from the screen 
-
-   ```bash
-   yarn logs -applicationId xxxxxxxxxx | less
-   ```
+2. Check the log using the applicationId we get from the screen 
+   
+```bash
+yarn logs -applicationId xxxxxxxxxx | less
+```
 
 ### 3. MxnetOnYARN 
    
-   1. Train mnist in distributed model.
+1. Train mnist in distributed model.
 
-   ```bash
-   ./bin/ydl-mx 2 train_mnist.py --kv-store sync
-   ```
+```bash
+./bin/ydl-mx 2 train_mnist.py --kv-store sync
+```
    
-   2. Check the log using the applicationId we get from the screen 
+2. Check the log using the applicationId we get from the screen 
 
-   ```bash
-   yarn logs -applicationId xxxxxxxxxxxx | less
-   ```
-
+```bash
+yarn logs -applicationId xxxxxxxxxxxx | less
+```
