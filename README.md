@@ -28,12 +28,11 @@ This project will focuses on the whole architecture, common facilities and high 
 # How TO Run
 
 ### 1. TensorFlow
-   
+Assume you are in `TensorflowOnYARN` dir.
 1. Prepare the build environment following the instructions from [TensorFlow tutorial](https://www.tensorflow.org/install/install_sources)
 
 2. Run the [between-graph mnist example](TensorflowOnYARN/examples/between-graph/mnist_feed.py).
 
-Assume you are in `TensorflowOnYARN` dir.
 **Method One:**
 
 Apply resources (ClusterSpec) and run.
