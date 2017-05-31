@@ -1,15 +1,15 @@
 # HDL - Deep Learning on Hadoop
-Support Deep Learning on Hadoop platform, leveraging existing popular Deep Learning engines such as Tensorflow, mxNet, Caffe and Intel Caffe. Ref. [HADOOP-13944](https://issues.apache.org/jira/browse/HADOOP-13944)
+Support Deep Learning on Hadoop platform, leveraging existing popular Deep Learning engines such as TensorFlow, MXNet, Caffe and Intel Caffe. Ref. [HADOOP-13944](https://issues.apache.org/jira/browse/HADOOP-13944)
 
 This project will focuses on the whole architecture, common facilities and high level considerations. It has respective sub project for each engine, as follows.
 
-* [Tensorflow on YARN](https://github.com/Intel-bigdata/TensorFlowOnYARN)
-* [mxNet on YARN](https://github.com/Intel-bigdata/mxnetOnYARN)
+* [TensorFlow on YARN](https://github.com/Intel-bigdata/TensorFlowOnYARN)
+* [MXNet on YARN](https://github.com/Intel-bigdata/mxnetOnYARN)
 * [Caffe on YARN](https://github.com/Intel-bigdata/CaffeOnYARN)
 
 # High level considerations
 * A new layer in Hadoop for launching, distributing and executing Deep Learning workloads like for MapReduce;
-* A framework in the new layer to leverage and support existing Deep Learning engines such as Tensorflow, Caffe/Intel-Caffe, MXNet, Nevana and etc.;
+* A framework in the new layer to leverage and support existing Deep Learning engines such as TensorFlow, Caffe/Intel-Caffe, MXNet, Nevana and etc.;
 * Extend and enhance YARN to support the desired scheduling capabilities, like already raised in the community, for FPGA, GPU and etc.;
 * Optimize HDFS storage and provide desired data formats for Deep Learning;
 * Tools and libraries to submit and manage DL jobs, necessary web UIs for the monitoring and troubleshooting;
@@ -27,18 +27,18 @@ This project will focuses on the whole architecture, common facilities and high 
 
 # How TO Run
 
-### 1. TensorFlowOnYARN 
+### 1. TensorFlow
    
-1. Prepare the build environment following the instructions from [Tensorflow tutorial](https://www.tensorflow.org/install/install_sources)
+1. Prepare the build environment following the instructions from [TensorFlow tutorial](https://www.tensorflow.org/install/install_sources)
 
 2. Run the [between-graph mnist example](TensorflowOnYARN/examples/between-graph/mnist_feed.py).
-   
+
+Assume you are in `TensorflowOnYARN` dir.
 **Method One:**
 
 Apply resources (ClusterSpec) and run.
 
 ```bash
-cd tensorflow-yarn-${VERSION}
 bin/ydl-tf launch --num_worker 2 --num_ps 2
 ```
 
@@ -61,10 +61,10 @@ python examples/between-graph/mnist_feed.py \
 ```
 **Method Two:**
   
-Directly submit training jobs and parameters to YARN.
+Directly submit TensorFlow training jobs and parameters to YARN.
 
 ```bash
-python demo.py "bin/ydl-tf" "launch" "examples/between-graph/mnist_feed.py"
+python bin/demo.py "bin/ydl-tf" "launch" "examples/between-graph/mnist_feed.py"
 ```
 
 3. To get ClusterSpec of an existing TensorFlow cluster launched by a previous YARN application.
@@ -87,12 +87,13 @@ or kill an existing YARN application(TensorFlow cluster),
 bin/ydl-tf kill --application <Application ID>
 ```
 
-### 2. CaffeYARN 
+### 2. Caffe
+Assume you are in `CaffeOnYARN` dir.
 
 1. Train mnist with the jar package, prototxt and parameters. The number means the number of service we launch.
    
 ```bash
-./ydl-caffe -jar ydl-caffe.jar -conf /path/lenet_memory_solver.prototxt -model hdfs:///mnist.model -num 3
+bin/ydl-caffe -jar ydl-caffe.jar -conf /path/lenet_memory_solver.prototxt -model hdfs:///mnist.model -num 3
 ```
 
 2. Check the log using the applicationId we get from the screen 
@@ -100,17 +101,28 @@ bin/ydl-tf kill --application <Application ID>
 ```bash
 yarn logs -applicationId xxxxxxxxxx | less
 ```
+or kill an existing YARN application,
 
-### 3. MxnetOnYARN 
-   
+```bash
+yarn application -kill <Application ID>
+```
+
+
+### 3. MXNet
+Assume you are in `MXNetOnYARN` dir. 
 1. Train mnist in distributed model.
 
 ```bash
-./bin/ydl-mx 2 train_mnist.py --kv-store sync
+bin/ydl-mx 2 train_mnist.py --kv-store sync
 ```
    
 2. Check the log using the applicationId we get from the screen 
 
 ```bash
 yarn logs -applicationId xxxxxxxxxxxx | less
+```
+or kill an existing YARN application,
+
+```bash
+yarn application -kill <Application ID>
 ```
